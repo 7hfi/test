@@ -1,8 +1,10 @@
-THIS SHOULD BE A LINTER ERRORimport 'dart:io';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_editor/video_editor.dart';
+import 'package:fl_chart/fl_chart.dart';
+import '../widgets/keyframe_graph_widget.dart';
 
 import '../video_editor_state.dart';
 
@@ -17,6 +19,12 @@ class _EditorScreenState extends State<EditorScreen> {
   int? _selectedFps;
 
   final List<int> _fpsOptions = [24, 25, 30, 48, 60];
+  final List<FlSpot> _demoCurve = const [
+    FlSpot(0, 0),
+    FlSpot(0.3, 0.1),
+    FlSpot(0.6, 0.9),
+    FlSpot(1, 1),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +95,25 @@ class _EditorScreenState extends State<EditorScreen> {
                   controller: controller,
                   viewerHeight: 50,
                   viewerWidth: MediaQuery.of(context).size.width,
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Text('Keyframe Graph'),
+                              content: SizedBox(
+                                  width: 300,
+                                  child: KeyframeGraphWidget(points: _demoCurve)),
+                              actions: [
+                                TextButton(
+                                    onPressed: () => Navigator.of(context).pop(),
+                                    child: const Text('Close')),
+                              ],
+                            ));
+                  },
+                  child: const Text('Show Graph'),
                 ),
               ],
             ),
